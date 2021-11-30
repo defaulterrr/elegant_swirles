@@ -1,0 +1,6 @@
+grpc:
+  host: localhost
+  port: 8082
+  maxConnectionIdle: 5 # Minutes
+  timeout: 15 # Seconds
+  maxConnectionAge: 5 # Minutes

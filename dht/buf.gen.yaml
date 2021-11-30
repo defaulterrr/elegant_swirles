@@ -1,0 +1,13 @@
+version: v1
+plugins:
+  - name: go
+    out: grpc/go
+    opt:
+      - paths=import
+    strategy: directory
+
+  - name: go-grpc
+    out: grpc/go
+    opt:
+      - paths=import
+    strategy: directory
