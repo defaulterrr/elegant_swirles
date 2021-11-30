@@ -25,7 +25,7 @@ func Run() {
 	serv := service.NewService()
 
 	if err := server.NewServer(serv).Start(&config.Grpc); err != nil {
-		fmt.Printf("Failed creating gRPC server: %v", err)
+		fmt.Printf("server.NewServer: %v", err)
 		return
 	}
 }

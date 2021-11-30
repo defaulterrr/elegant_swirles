@@ -14,7 +14,7 @@ type GRPCConns struct {
 func GetGRPCConns(cfg *config.Grpc) (*GRPCConns, error) {
 	dhtConn, err := getDHTConn(fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
 	if err != nil {
-		return nil, fmt.Errorf("connections: getDHTConn: %v", err)
+		return nil, fmt.Errorf("getDHTConn: %v", err)
 	}
 
 	return &GRPCConns{

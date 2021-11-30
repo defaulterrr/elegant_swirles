@@ -27,13 +27,13 @@ func NewServer(serv service.IService) *Server {
 func (s *Server) Start(cfg *config.Grpc) error {
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%v", cfg.Host, cfg.Port))
 	if err != nil {
-		return fmt.Errorf("server: Listen: %v", err)
+		return fmt.Errorf("Listen: %v", err)
 	}
 
 	newServer := grpc.NewServer()
 	pb.RegisterDHTServer(newServer, s)
 	if err := newServer.Serve(lis); err != nil {
-		return fmt.Errorf("server: Serve: %v", err)
+		return fmt.Errorf("Serve: %v", err)
 	}
 
 	return nil
@@ -45,7 +45,7 @@ func (s *Server) GetDHTMetrics(in *emptypb.Empty, srv pb.DHT_GetDHTMetricsServer
 	go func() {
 		err := s.serv.GetMetrics(srv.Context(), metrics)
 		if err != nil {
-			fmt.Printf("server: GetMetrics: %v\n", err)
+			fmt.Printf("GetMetrics: %v\n", err)
 		}
 	}()
 
@@ -55,7 +55,7 @@ func (s *Server) GetDHTMetrics(in *emptypb.Empty, srv pb.DHT_GetDHTMetricsServer
 			Humidity:    el.Temperature,
 			Created:     timestamppb.Now(),
 		}); err != nil {
-			fmt.Printf("server: Send: %v\n", err)
+			fmt.Printf("Send: %v\n", err)
 			return err
 		}
 	}

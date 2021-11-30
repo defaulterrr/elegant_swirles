@@ -28,20 +28,20 @@ func (m *MetricsGRPC) GetFromDHT(ctx context.Context, metrics chan<- model.DHTMe
 	stream, err := m.getDHTClient().GetDHTMetrics(ctx, &emptypb.Empty{})
 	if err != nil {
 		close(metrics)
-		return fmt.Errorf("metrics_grpc: GetFromDHT: GetDHTMetrics: %v", err)
+		return fmt.Errorf("GetDHTMetrics: %v", err)
 	}
 
 	for {
 		metr, err := stream.Recv()
 		if err != nil {
 			close(metrics)
-			return fmt.Errorf("metrics_grpc: GetFromDHT: Recv: %v", err)
+			return err
 		}
 
 		select {
 		case <-ctx.Done():
 			close(metrics)
-			return fmt.Errorf("metrics_grpc: GetFromDHT: ctx done: %v", ctx.Err())
+			return ctx.Err()
 		case metrics <- dhtMetricsPbToModel(metr):
 		}
 	}

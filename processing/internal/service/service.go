@@ -25,7 +25,7 @@ func NewService(repo *repository.Repository) IService {
 func (s *Service) GetDHTMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error {
 	err := s.Repo.GetFromDHT(ctx, metrics)
 	if err != nil {
-		return fmt.Errorf("service: GetDHTMetrics:GetFromDHT: %v", err)
+		return fmt.Errorf("GetFromDHT: %v", err)
 	}
 
 	return nil

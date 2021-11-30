@@ -18,7 +18,7 @@ type Grpc struct {
 func NewConfig(filePath string) (*Config, error) {
 	var cfg Config
 	if err := cleanenv.ReadConfig(filePath, &cfg); err != nil {
-		return nil, fmt.Errorf("config: %v", err)
+		return nil, fmt.Errorf("cleanenv.ReadConfig: %v", err)
 	}
 
 	return &cfg, nil
