@@ -7,12 +7,19 @@ import (
 )
 
 type Config struct {
-	Grpc Grpc `yaml:"grpc"`
+	Grpc    Grpc    `yaml:"grpc"`
+	Metrics Metrics `yaml:"metrics"`
 }
 
 type Grpc struct {
 	Port int    `yaml:"port"`
 	Host string `yaml:"host"`
+}
+
+type Metrics struct {
+	Port int    `yaml:"port"`
+	Host string `yaml:"host"`
+	Path string `yaml:"path"`
 }
 
 func NewConfig(filePath string) (*Config, error) {

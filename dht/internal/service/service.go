@@ -20,13 +20,12 @@ func NewService() IService {
 }
 
 func (s *Service) GetMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error {
-	newRandSource := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(newRandSource)
+	rand.Seed(time.Now().UnixNano())
 
 	for {
 		newMetr := model.DHTMetrics{
-			Temperature: float32(r.Int31n(50)),
-			Humidity:    float32(r.Int31n(100)),
+			Temperature: float32(rand.Int31n(50)),
+			Humidity:    float32(rand.Int31n(100)),
 		}
 
 		select {
