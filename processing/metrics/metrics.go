@@ -43,10 +43,10 @@ func SetTemperature(temp float64) {
 	temperature.Set(temp)
 }
 
-func SetHumidity(temp float64) {
+func SetHumidity(hum float64) {
 	if humidity == nil {
 		return
 	}
 
-	humidity.Set(temp)
+	humidity.Set(hum)
 }

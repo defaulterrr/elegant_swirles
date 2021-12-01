@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"math/rand"
+	"math"
 	"time"
 
 	"github.com/defaulterrr/elegant_swirles/dht/internal/model"
@@ -16,12 +16,12 @@ func NewService() *DHTService {
 }
 
 func (s *DHTService) GetMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error {
-	rand.Seed(time.Now().UnixNano())
+	var i float64
 
 	for {
 		newMetrics := model.DHTMetrics{
-			Temperature: float32(rand.Int31n(50)),
-			Humidity:    float32(rand.Int31n(100)),
+			Temperature: float32(math.Abs(math.Sin(i) * 50)),
+			Humidity:    float32(math.Abs(math.Cos(i) * 100)),
 		}
 
 		select {
@@ -30,6 +30,8 @@ func (s *DHTService) GetMetrics(ctx context.Context, metrics chan<- model.DHTMet
 			return ctx.Err()
 		case metrics <- newMetrics:
 		}
+
+		i = float64(int(i+1) % 1000)
 		time.Sleep(time.Second * 1)
 	}
 }

@@ -69,6 +69,7 @@ func Run() error {
 		}
 
 		metrics.SetTemperature(float64(metr.Temperature))
+		metrics.SetHumidity(float64(metr.Humidity))
 		fmt.Println(metr)
 	}
 
