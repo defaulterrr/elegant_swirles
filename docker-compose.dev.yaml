@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  dht:
+    build:
+      context: ./dht
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 8082:8082 # gRPC
+
+  processing:
+    build:
+      context: ./processing
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 9100:9100 # Metrics prometheus
+    depends_on:
+      - dht
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./processing/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - dht
