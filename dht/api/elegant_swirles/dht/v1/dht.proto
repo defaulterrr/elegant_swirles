@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package elegant_swirles.dht.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "elegant_swirles/dht;dht";
+
+service DHT {
+  rpc GetDHTMetrics(google.protobuf.Empty) returns (stream Metrics) {}
+}
+
+message Metrics {
+  float temperature = 1;
+  float humidity = 2;
+  google.protobuf.Timestamp created = 3;
+}
