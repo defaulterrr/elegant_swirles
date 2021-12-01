@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/defaulterrr/iot3/dht/internal/config"
-	"github.com/defaulterrr/iot3/dht/internal/server"
-	"github.com/defaulterrr/iot3/dht/internal/service"
+	"github.com/defaulterrr/elegant_swirles/dht/internal/config"
+	"github.com/defaulterrr/elegant_swirles/dht/internal/server"
+	"github.com/defaulterrr/elegant_swirles/dht/internal/service"
 )
 
 func Run() {

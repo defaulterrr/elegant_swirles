@@ -1,4 +1,4 @@
-module github.com/defaulterrr/iot3/dht
+module github.com/defaulterrr/elegant_swirles/dht
 
 go 1.17
 

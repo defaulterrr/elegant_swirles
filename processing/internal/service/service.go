@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/defaulterrr/iot3/processing/internal/model"
-	"github.com/defaulterrr/iot3/processing/internal/repository"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/repository"
 )
 
 type IService interface {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/defaulterrr/iot3/processing/grpc/go/um4ru_ch4n/dht"
-	"github.com/defaulterrr/iot3/processing/internal/model"
+	pb "github.com/defaulterrr/elegant_swirles/processing/grpc/go/um4ru_ch4n/dht"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

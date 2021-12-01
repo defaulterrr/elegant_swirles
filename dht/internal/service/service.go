@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/defaulterrr/iot3/dht/internal/model"
+	"github.com/defaulterrr/elegant_swirles/dht/internal/model"
 )
 
 type IService interface {

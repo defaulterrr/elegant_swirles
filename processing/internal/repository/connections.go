@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 
-	"github.com/defaulterrr/iot3/processing/internal/config"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/config"
 	"google.golang.org/grpc"
 )
 

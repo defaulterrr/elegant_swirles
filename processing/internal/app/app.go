@@ -7,10 +7,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/defaulterrr/iot3/processing/internal/config"
-	"github.com/defaulterrr/iot3/processing/internal/model"
-	"github.com/defaulterrr/iot3/processing/internal/repository"
-	"github.com/defaulterrr/iot3/processing/internal/service"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/config"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/repository"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/service"
 )
 
 func Run() {
@@ -36,19 +36,20 @@ func Run() {
 	serv := service.NewService(repo)
 
 	// testing GetDHTMetrics function
-	metrics := make(chan model.DHTMetrics)
+	curMetrics := make(chan model.DHTMetrics)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	go func() {
-		err = serv.GetDHTMetrics(ctx, metrics)
+		err = serv.GetDHTMetrics(ctx, curMetrics)
 		if err != nil {
 			fmt.Printf("GetDHTMetrics: %v", err)
 		}
 	}()
 
-	for i := 0; i < 5; i++ {
-		fmt.Println(<-metrics)
+	for i := 0; i < 200; i++ {
+		metr := <-curMetrics
+		fmt.Println(metr)
 	}
 
 	cancel()
