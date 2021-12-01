@@ -14,12 +14,12 @@ var (
 func InitMetrics() error {
 	temperature = prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "temperature",
-		Help: "Current temperature",
+		Help: "Current temperature from DHT",
 	})
 
 	humidity = prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "humidity",
-		Help: "Current humidity",
+		Help: "Current humidity from DHT",
 	})
 
 	err := prometheus.Register(temperature)

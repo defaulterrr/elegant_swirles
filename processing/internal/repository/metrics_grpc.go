@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/defaulterrr/elegant_swirles/processing/grpc/go/um4ru_ch4n/dht"
+	"github.com/defaulterrr/elegant_swirles/processing/grpc/go/um4ru_ch4n/dht"
 	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -25,14 +25,14 @@ func NewMetricsGRPC(DHTConn *grpc.ClientConn) Metrics {
 }
 
 func (m *MetricsGRPC) GetFromDHT(ctx context.Context, metrics chan<- model.DHTMetrics) error {
-	stream, err := m.getDHTClient().GetDHTMetrics(ctx, &emptypb.Empty{})
+	metricsStream, err := m.getDHTClient().GetDHTMetrics(ctx, &emptypb.Empty{})
 	if err != nil {
 		close(metrics)
 		return fmt.Errorf("GetDHTMetrics: %v", err)
 	}
 
 	for {
-		metr, err := stream.Recv()
+		curMetrics, err := metricsStream.Recv()
 		if err != nil {
 			close(metrics)
 			return err
@@ -42,19 +42,19 @@ func (m *MetricsGRPC) GetFromDHT(ctx context.Context, metrics chan<- model.DHTMe
 		case <-ctx.Done():
 			close(metrics)
 			return ctx.Err()
-		case metrics <- dhtMetricsPbToModel(metr):
+		case metrics <- dhtMetricsPbToModel(curMetrics):
 		}
 	}
 }
 
-func (m *MetricsGRPC) getDHTClient() pb.DHTClient {
-	return pb.NewDHTClient(m.DHTConn)
+func (m *MetricsGRPC) getDHTClient() dht.DHTClient {
+	return dht.NewDHTClient(m.DHTConn)
 }
 
-func dhtMetricsPbToModel(metr *pb.Metrics) model.DHTMetrics {
+func dhtMetricsPbToModel(metrics *dht.Metrics) model.DHTMetrics {
 	return model.DHTMetrics{
-		Temperature: metr.GetTemperature(),
-		Humidity:    metr.GetHumidity(),
-		Created:     metr.GetCreated().Seconds,
+		Temperature: metrics.GetTemperature(),
+		Humidity:    metrics.GetHumidity(),
+		Created:     metrics.GetCreated().Seconds,
 	}
 }

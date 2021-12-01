@@ -1,37 +1,41 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net"
 
-	pb "github.com/defaulterrr/elegant_swirles/dht/grpc/go/um4ru_ch4n/dht"
+	"github.com/defaulterrr/elegant_swirles/dht/grpc/go/um4ru_ch4n/dht"
 	"github.com/defaulterrr/elegant_swirles/dht/internal/config"
 	"github.com/defaulterrr/elegant_swirles/dht/internal/model"
-	"github.com/defaulterrr/elegant_swirles/dht/internal/service"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type Server struct {
-	serv service.IService
-	pb.UnimplementedDHTServer
+type IDHTService interface {
+	GetMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error
 }
 
-func NewServer(serv service.IService) *Server {
+type Server struct {
+	dhtService IDHTService
+	dht.UnimplementedDHTServer
+}
+
+func NewServer(dhtService IDHTService) *Server {
 	return &Server{
-		serv: serv,
+		dhtService: dhtService,
 	}
 }
 
-func (s *Server) Start(cfg *config.Grpc) error {
-	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%v", cfg.Host, cfg.Port))
+func (s *Server) Start(grpcCfg *config.Grpc) error {
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%v", grpcCfg.Host, grpcCfg.Port))
 	if err != nil {
 		return fmt.Errorf("Listen: %v", err)
 	}
 
 	newServer := grpc.NewServer()
-	pb.RegisterDHTServer(newServer, s)
+	dht.RegisterDHTServer(newServer, s)
 	if err := newServer.Serve(lis); err != nil {
 		return fmt.Errorf("Serve: %v", err)
 	}
@@ -39,18 +43,18 @@ func (s *Server) Start(cfg *config.Grpc) error {
 	return nil
 }
 
-func (s *Server) GetDHTMetrics(in *emptypb.Empty, srv pb.DHT_GetDHTMetricsServer) error {
+func (s *Server) GetDHTMetrics(in *emptypb.Empty, dhtServer dht.DHT_GetDHTMetricsServer) error {
 	metrics := make(chan model.DHTMetrics)
 
 	go func() {
-		err := s.serv.GetMetrics(srv.Context(), metrics)
+		err := s.dhtService.GetMetrics(dhtServer.Context(), metrics)
 		if err != nil {
 			fmt.Printf("GetMetrics: %v\n", err)
 		}
 	}()
 
 	for el := range metrics {
-		if err := srv.Send(&pb.Metrics{
+		if err := dhtServer.Send(&dht.Metrics{
 			Temperature: el.Temperature,
 			Humidity:    el.Temperature,
 			Created:     timestamppb.Now(),

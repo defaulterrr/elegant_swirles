@@ -8,7 +8,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func CreateMetricsServer(cfg *config.Metrics) *http.Server {
+func createMetricsServer(cfg *config.Metrics) *http.Server {
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 
 	mux := http.DefaultServeMux
