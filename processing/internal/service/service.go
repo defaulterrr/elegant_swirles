@@ -8,12 +8,6 @@ import (
 	"github.com/defaulterrr/elegant_swirles/processing/internal/repository"
 )
 
-type dhtService interface {
-	GetDHTMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error
-}
-
-var _ dhtService = &DHTService{}
-
 type DHTService struct {
 	repo *repository.Repository
 }

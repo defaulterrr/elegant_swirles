@@ -26,5 +26,29 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - ./processing/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - eleg
     depends_on:
-      - dht
+      - processing
+  
+  grafana:
+    image: grafana/grafana:8.3.0
+    ports:
+      - 3000:3000
+    links:
+      - prometheus
+      - processing
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    user: '0'
+    networks:
+      - eleg
+    depends_on:
+      - prometheus
+
+networks:
+  eleg:
+    driver: bridge

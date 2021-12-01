@@ -8,12 +8,6 @@ import (
 	"github.com/defaulterrr/elegant_swirles/dht/internal/model"
 )
 
-type dhtService interface {
-	GetMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error
-}
-
-var _ dhtService = &DHTService{}
-
 type DHTService struct {
 }
 
