@@ -1,11 +1,4 @@
 # elegant_swirles
 
-## Run dht service
-``cd dht``
-
-``make run``
-
-## Run processing service
-``cd processing``
-
-``make run``
+## Run
+``docker-compose -f docker-compose.dev.yaml up``
