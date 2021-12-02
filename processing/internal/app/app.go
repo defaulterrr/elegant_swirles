@@ -4,10 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"sync"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/defaulterrr/elegant_swirles/processing/internal/config"
-	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
 	"github.com/defaulterrr/elegant_swirles/processing/internal/repository"
 	"github.com/defaulterrr/elegant_swirles/processing/internal/server"
 	"github.com/defaulterrr/elegant_swirles/processing/internal/service"
@@ -46,66 +47,32 @@ func Run() error {
 	newService := service.NewService(newRepo)
 	newServer := server.NewServer(newService)
 
-	// testing GetDHTMetrics function
 	err = newServer.Start(&cfg.Metrics)
 	if err != nil {
 		fmt.Printf("Start: %v\n", err)
 	}
 
-	curMetrics := make(chan model.DHTMetrics)
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	go func() {
-		err = newService.DHTService.GetDHTMetrics(ctx, curMetrics)
+		err := newServer.ReadDHTMetrics(ctx)
 		if err != nil {
-			fmt.Printf("GetDHTMetrics: %v\n", err)
+			fmt.Printf("ReadDHTMetrics: %v", err)
 		}
 	}()
 
-	var wg sync.WaitGroup
-
-	wg.Add(1)
 	go func() {
-		for i := 0; i < 1000; i++ {
-			metr, ok := <-curMetrics
-			if !ok {
-				break
-			}
-
-			metrics.SetTemperature(float64(metr.Temperature))
-			metrics.SetHumidity(float64(metr.Humidity))
-			fmt.Println(metr)
-		}
-		wg.Done()
-	}()
-
-	go func() {
-		wg.Wait()
-		cancel()
-	}()
-
-	curCameraMetrics := make(chan model.CameraMetrics)
-	cameraCtx, cameraCancel := context.WithCancel(context.Background())
-	defer cameraCancel()
-
-	go func() {
-		err = newService.CameraService.GetCameraMetrics(cameraCtx, curCameraMetrics)
+		err := newServer.ReadCameraMetrics(ctx)
 		if err != nil {
-			fmt.Printf("GetCameraMetrics: %v\n", err)
+			fmt.Printf("ReadCameraMetrics: %v", err)
 		}
 	}()
 
-	for i := 0; i < 1000; i++ {
-		cameraMetr, ok := <-curCameraMetrics
-		if !ok {
-			break
-		}
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
-		metrics.SetCountPeople(float64(cameraMetr.CountPeople))
-		fmt.Println(cameraMetr)
-	}
-	cameraCancel()
+	<-c
+	cancel()
 
 	fmt.Println("finish")
 
