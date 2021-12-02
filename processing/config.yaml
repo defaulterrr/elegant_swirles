@@ -1,6 +1,10 @@
-grpc:
+dht_grpc:
   host: dht
   port: 8082
+
+camera_grpc:
+  host: camera
+  port: 8092
 
 metrics:
   host: 0.0.0.0

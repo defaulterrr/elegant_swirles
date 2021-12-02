@@ -1,26 +1,21 @@
 package server
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/defaulterrr/elegant_swirles/processing/internal/config"
-	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
+	"github.com/defaulterrr/elegant_swirles/processing/internal/service"
 )
 
-type IDHTService interface {
-	GetDHTMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error
-}
-
 type Server struct {
-	dhtService IDHTService
+	Service *service.Service
 }
 
-func NewServer(dhtService IDHTService) *Server {
+func NewServer(service *service.Service) *Server {
 	return &Server{
-		dhtService: dhtService,
+		Service: service,
 	}
 }
 

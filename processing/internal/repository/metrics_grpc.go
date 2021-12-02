@@ -4,27 +4,23 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/defaulterrr/elegant_swirles/processing/grpc/go/um4ru_ch4n/dht"
+	"github.com/defaulterrr/elegant_swirles/processing/grpc/go/elegant_swirles/dht"
 	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-type Metrics interface {
-	GetFromDHT(ctx context.Context, metrics chan<- model.DHTMetrics) error
-}
-
-type MetricsGRPC struct {
+type DHTMetricsGRPC struct {
 	DHTConn *grpc.ClientConn
 }
 
-func NewMetricsGRPC(DHTConn *grpc.ClientConn) Metrics {
-	return &MetricsGRPC{
+func NewDHTMetricsGRPC(DHTConn *grpc.ClientConn) *DHTMetricsGRPC {
+	return &DHTMetricsGRPC{
 		DHTConn: DHTConn,
 	}
 }
 
-func (m *MetricsGRPC) GetFromDHT(ctx context.Context, metrics chan<- model.DHTMetrics) error {
+func (m *DHTMetricsGRPC) GetFromDHT(ctx context.Context, metrics chan<- model.DHTMetrics) error {
 	metricsStream, err := m.getDHTClient().GetDHTMetrics(ctx, &emptypb.Empty{})
 	if err != nil {
 		close(metrics)
@@ -47,7 +43,7 @@ func (m *MetricsGRPC) GetFromDHT(ctx context.Context, metrics chan<- model.DHTMe
 	}
 }
 
-func (m *MetricsGRPC) getDHTClient() dht.DHTClient {
+func (m *DHTMetricsGRPC) getDHTClient() dht.DHTClient {
 	return dht.NewDHTClient(m.DHTConn)
 }
 

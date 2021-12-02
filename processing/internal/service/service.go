@@ -2,27 +2,27 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/defaulterrr/elegant_swirles/processing/internal/model"
 	"github.com/defaulterrr/elegant_swirles/processing/internal/repository"
 )
 
-type DHTService struct {
-	repo *repository.Repository
+type IDHTService interface {
+	GetDHTMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error
 }
 
-func NewService(repo *repository.Repository) *DHTService {
-	return &DHTService{
-		repo: repo,
-	}
+type ICameraService interface {
+	GetCameraMetrics(ctx context.Context, metrics chan<- model.CameraMetrics) error
 }
 
-func (s *DHTService) GetDHTMetrics(ctx context.Context, metrics chan<- model.DHTMetrics) error {
-	err := s.repo.GetFromDHT(ctx, metrics)
-	if err != nil {
-		return fmt.Errorf("GetFromDHT: %v", err)
-	}
+type Service struct {
+	DHTService    IDHTService
+	CameraService ICameraService
+}
 
-	return nil
+func NewService(repos *repository.Repository) *Service {
+	return &Service{
+		DHTService:    NewDHTService(repos.DHTMetrics),
+		CameraService: NewCameraService(repos.CameraMetrics),
+	}
 }

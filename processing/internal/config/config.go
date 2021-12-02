@@ -7,11 +7,17 @@ import (
 )
 
 type Config struct {
-	Grpc    Grpc    `yaml:"grpc"`
-	Metrics Metrics `yaml:"metrics"`
+	DHTGrpc    DHTGrpc    `yaml:"dht_grpc"`
+	CameraGrpc CameraGrpc `yaml:"camera_grpc"`
+	Metrics    Metrics    `yaml:"metrics"`
 }
 
-type Grpc struct {
+type DHTGrpc struct {
+	Port int    `yaml:"port"`
+	Host string `yaml:"host"`
+}
+
+type CameraGrpc struct {
 	Port int    `yaml:"port"`
 	Host string `yaml:"host"`
 }
