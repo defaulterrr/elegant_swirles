@@ -8,6 +8,13 @@ services:
     ports:
       - 8082:8082 # gRPC
 
+  camera:
+    build:
+      context: ./camera
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 8092:8092 # gRPC
+
   processing:
     build:
       context: ./processing
@@ -16,6 +23,7 @@ services:
       - 9100:9100 # Metrics prometheus
     depends_on:
       - dht
+      - camera
 
   prometheus:
     image: prom/prometheus:latest
@@ -28,14 +36,13 @@ services:
       - ./processing/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - processing
-  
+
   grafana:
     image: grafana/grafana:8.3.0
     ports:
       - 3000:3000
     links:
       - prometheus
-      - processing
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false

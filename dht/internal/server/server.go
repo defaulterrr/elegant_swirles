@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/defaulterrr/elegant_swirles/dht/grpc/go/um4ru_ch4n/dht"
+	"github.com/defaulterrr/elegant_swirles/dht/grpc/go/elegant_swirles/dht"
 	"github.com/defaulterrr/elegant_swirles/dht/internal/config"
 	"github.com/defaulterrr/elegant_swirles/dht/internal/model"
 	"google.golang.org/grpc"

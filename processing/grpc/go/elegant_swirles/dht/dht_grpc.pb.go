@@ -31,7 +31,7 @@ func NewDHTClient(cc grpc.ClientConnInterface) DHTClient {
 }
 
 func (c *dHTClient) GetDHTMetrics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (DHT_GetDHTMetricsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &DHT_ServiceDesc.Streams[0], "/um4ru_ch4n.dht.v1.DHT/GetDHTMetrics", opts...)
+	stream, err := c.cc.NewStream(ctx, &DHT_ServiceDesc.Streams[0], "/elegant_swirles.dht.v1.DHT/GetDHTMetrics", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (x *dHTGetDHTMetricsServer) Send(m *Metrics) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DHT_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "um4ru_ch4n.dht.v1.DHT",
+	ServiceName: "elegant_swirles.dht.v1.DHT",
 	HandlerType: (*DHTServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
@@ -125,5 +125,5 @@ var DHT_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "um4ru_ch4n/dht/v1/dht.proto",
+	Metadata: "elegant_swirles/dht/v1/dht.proto",
 }

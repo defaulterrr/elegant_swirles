@@ -9,6 +9,7 @@ import (
 var (
 	temperature prometheus.Gauge
 	humidity    prometheus.Gauge
+	countPeople prometheus.Gauge
 )
 
 func InitMetrics() error {
@@ -22,6 +23,11 @@ func InitMetrics() error {
 		Help: "Current humidity from DHT",
 	})
 
+	countPeople = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "countPeople",
+		Help: "Current countPeople from Camera",
+	})
+
 	err := prometheus.Register(temperature)
 	if err != nil {
 		return fmt.Errorf("prometheus.Register(temperature): %v", err)
@@ -30,6 +36,11 @@ func InitMetrics() error {
 	err = prometheus.Register(humidity)
 	if err != nil {
 		return fmt.Errorf("prometheus.Register(humidity): %v", err)
+	}
+
+	err = prometheus.Register(countPeople)
+	if err != nil {
+		return fmt.Errorf("prometheus.Register(countPeople): %v", err)
 	}
 
 	return nil
@@ -49,4 +60,12 @@ func SetHumidity(hum float64) {
 	}
 
 	humidity.Set(hum)
+}
+
+func SetCountPeople(count float64) {
+	if countPeople == nil {
+		return
+	}
+
+	countPeople.Set(count)
 }
